@@ -48,7 +48,6 @@ def predict(query,embedder,corpus_embeddings):
 		# print("\nPost: {}\nDocument: {}\nScore: {:.4f}".format(post,df.iloc[idx.item()]['Sentence'],score))
 		answer.append({'link':df.iloc[idx.item()]['Link'],'sentence': df.iloc[idx.item()]['Sentence'],'score':score.item()})
 
-	print(answer)
 	pd.DataFrame(answer).to_csv("result.csv",index=False)
 
 with header:
@@ -60,14 +59,15 @@ with header:
 with model_training:
 
 	input_text = st.text_input('Input Query')
-	st.button("Search", on_click=predict, args=(input_text,embedder,corpus_embeddings), disabled=False)
+	btn_flag=st.button("Search", on_click=predict, args=(input_text,embedder,corpus_embeddings), disabled=False)
 
 with results:
-	res=pd.read_csv("result.csv")
-	
-	st.write("\nTop 5 most similar posts are:")
-	for idx in range(5):
-		st.write(f"### #{idx+1} [Check Piazza]({res.iloc[idx]['link']})")
-		st.write(f"**Text**: {res.iloc[idx]['sentence']}")
-		st.write(f"**Score**:{res.iloc[idx]['score']}")
+	if btn_flag:
+		res=pd.read_csv("result.csv")
+		
+		st.write("\nTop 5 most similar posts are:")
+		for idx in range(5):
+			st.write(f"### #{idx+1} [Check Piazza]({res.iloc[idx]['link']})")
+			st.write(f"**Text**: {res.iloc[idx]['sentence']}")
+			st.write(f"**Score**:{res.iloc[idx]['score']}")
 		
